@@ -29,11 +29,11 @@ namespace Lepre\Framework\Tests {
     use Lepre\Framework\Kernel;
     use Lepre\Framework\ModuleInterface;
     use Lepre\Framework\Test\HeaderStack;
-    use Lepre\Http\Server\Server;
     use Lepre\Routing\RouterMap;
     use PHPUnit\Framework\TestCase;
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
+    use Psr\Http\Server\RequestHandlerInterface;
 
     /**
      * @covers \Lepre\Framework\Kernel
@@ -48,13 +48,13 @@ namespace Lepre\Framework\Tests {
             $requestFactory = $this->createMock(ServerRequestFactoryInterface::class);
             $requestFactory->expects($this->once())->method('createServerRequestFromArray')->willReturn($request);
 
-            $server = $this->createMock(Server::class);
-            $server->expects($this->once())->method('handle')->with($request)->willReturn($response);
+            $requestHandler = $this->createMock(RequestHandlerInterface::class);
+            $requestHandler->expects($this->once())->method('handle')->with($request)->willReturn($response);
 
             $responseSender = $this->createMock(ResponseSenderInterface::class);
             $responseSender->expects($this->once())->method('send')->with($response);
 
-            $module = new class($requestFactory, $server, $responseSender) implements ModuleInterface
+            $module = new class($requestFactory, $requestHandler, $responseSender) implements ModuleInterface
             {
                 /**
                  * @var ServerRequestFactoryInterface
@@ -62,9 +62,9 @@ namespace Lepre\Framework\Tests {
                 private $requestFactory;
 
                 /**
-                 * @var Server
+                 * @var RequestHandlerInterface
                  */
-                private $server;
+                private $requestHandler;
 
                 /**
                  * @var ResponseSenderInterface
@@ -73,16 +73,16 @@ namespace Lepre\Framework\Tests {
 
                 /**
                  * @param ServerRequestFactoryInterface $requestFactory
-                 * @param Server                        $server
+                 * @param RequestHandlerInterface       $requestHandler
                  * @param ResponseSenderInterface       $responseSender
                  */
                 public function __construct(
                     ServerRequestFactoryInterface $requestFactory,
-                    Server $server,
+                    RequestHandlerInterface $requestHandler,
                     ResponseSenderInterface $responseSender
                 ) {
                     $this->requestFactory = $requestFactory;
-                    $this->server = $server;
+                    $this->requestHandler = $requestHandler;
                     $this->responseSender = $responseSender;
                 }
 
@@ -95,8 +95,8 @@ namespace Lepre\Framework\Tests {
                         return $this->requestFactory;
                     });
 
-                    $container->set('http.server', function () {
-                        return $this->server;
+                    $container->set('http.request_handler', function () {
+                        return $this->requestHandler;
                     });
 
                     $container->set('http.response_sender', function () {

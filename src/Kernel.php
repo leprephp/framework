@@ -33,6 +33,7 @@ use Lepre\Routing\RouterMapAdapterInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Kernel
@@ -91,7 +92,7 @@ class Kernel
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->getServer()->handle($request);
+        return $this->getRequestHandler()->handle($request);
     }
 
     /**
@@ -103,11 +104,11 @@ class Kernel
     }
 
     /**
-     * @return Server
+     * @return RequestHandlerInterface
      */
-    private function getServer(): Server
+    private function getRequestHandler(): RequestHandlerInterface
     {
-        return $this->getContainer()->get('http.server');
+        return $this->getContainer()->get('http.request_handler');
     }
 
     /**
@@ -140,7 +141,7 @@ class Kernel
         $container->set('environment', $this->environment);
         $container->set('debug', $this->debug);
 
-        $container->set('http.server', function (Container $container) {
+        $container->set('http.request_handler', function (Container $container) {
             return new Server(
                 $container->get('http.final_handler'),
                 $container
