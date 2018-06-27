@@ -21,7 +21,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
-class ResponseSender implements ResponseSenderInterface
+final class ResponseSender implements ResponseSenderInterface
 {
     /**
      * @var array

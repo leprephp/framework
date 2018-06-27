@@ -30,7 +30,7 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * @covers \Lepre\Framework\Handler\RouterHandler
  */
-class RoutingHandlerTest extends TestCase
+final class RoutingHandlerTest extends TestCase
 {
     /**
      * @var RouterInterface|MockObject

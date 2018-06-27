@@ -40,7 +40,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
-class Kernel
+final class Kernel
 {
     /**
      * @var ModuleInterface[]

@@ -21,7 +21,7 @@ use Psr\Container\ContainerInterface;
 /**
  * @covers \Lepre\Framework\Controller\ControllerResolver
  */
-class ControllerResolverTest extends TestCase
+final class ControllerResolverTest extends TestCase
 {
     public function testClosure()
     {

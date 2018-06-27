@@ -20,7 +20,7 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * @covers \Lepre\Framework\Controller\ArgumentsResolver
  */
-class ArgumentsResolverTest extends TestCase
+final class ArgumentsResolverTest extends TestCase
 {
     public function testClosureWithoutArguments()
     {

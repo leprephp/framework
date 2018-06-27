@@ -38,7 +38,7 @@ namespace Lepre\Framework\Tests {
     /**
      * @covers \Lepre\Framework\Kernel
      */
-    class KernelTest extends TestCase
+    final class KernelTest extends TestCase
     {
         public function testRun()
         {

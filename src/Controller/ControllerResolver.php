@@ -20,7 +20,7 @@ use Psr\Container\ContainerInterface;
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
-class ControllerResolver implements ControllerResolverInterface
+final class ControllerResolver implements ControllerResolverInterface
 {
     /**
      * @var ContainerInterface

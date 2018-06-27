@@ -29,7 +29,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
-class RouterHandler implements RequestHandlerInterface
+final class RouterHandler implements RequestHandlerInterface
 {
     /**
      * @var RouterInterface

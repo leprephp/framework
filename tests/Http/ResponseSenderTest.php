@@ -31,7 +31,7 @@ namespace Lepre\Framework\Tests\Http {
     /**
      * @covers \Lepre\Framework\Http\ResponseSender
      */
-    class ResponseSenderTest extends TestCase
+    final class ResponseSenderTest extends TestCase
     {
         /**
          * @var ResponseSender

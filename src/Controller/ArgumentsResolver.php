@@ -20,7 +20,7 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
-class ArgumentsResolver implements ArgumentsResolverInterface
+final class ArgumentsResolver implements ArgumentsResolverInterface
 {
     /**
      * @inheritDoc

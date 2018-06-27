@@ -16,7 +16,7 @@ namespace Lepre\Framework\Test;
 /**
  * HeaderStack
  */
-class HeaderStack
+final class HeaderStack
 {
     /**
      * @var array

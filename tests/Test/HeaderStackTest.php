@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \Lepre\Framework\Test\HeaderStack
  */
-class HeaderStackTest extends TestCase
+final class HeaderStackTest extends TestCase
 {
     public function setUp()
     {
