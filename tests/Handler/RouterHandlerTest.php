@@ -26,6 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * @covers \Lepre\Framework\Handler\RouterHandler
@@ -108,6 +109,38 @@ final class RouterHandlerTest extends TestCase
         $this->assertEquals('POST, PUT, PATCH', $response->getHeaderLine('Allow'));
     }
 
+    public function testWhenTheControllerIsAnInstanceOfPsrRequestHandlerInterface()
+    {
+        /**
+         * @var \PHPUnit\Framework\MockObject\MockObject|ServerRequestInterface  $response
+         * @var \PHPUnit\Framework\MockObject\MockObject|RequestHandlerInterface $handler
+         */
+        $response = $this->createMock(ResponseInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+
+        $params = [
+            'foo' => 123,
+            'bar' => 'baz',
+            'baz' => ['a', 'b', 'c'],
+        ];
+
+        $handler->expects($this->once())
+            ->method('handle')
+            ->with(
+                $this->callback(function (ServerRequestInterface $request) use ($params, $response) {
+                    $this->assertEquals($params, $request->getAttributes());
+
+                    return $response;
+                })
+            )
+            ->willReturn($response);
+
+        $this->assertSame(
+            $response,
+            $this->getRouterHandlerMock($handler, $params)->handle($this->request)
+        );
+    }
+
     public function testTheRouterParamsWillBePassedToTheRequest()
     {
         $params = [
@@ -152,7 +185,12 @@ final class RouterHandlerTest extends TestCase
         $this->assertEquals('Ooops! I made a mistake :(', $response->getBody()->__toString());
     }
 
-    private function getRouterHandlerMock(callable $controller, array $params = [])
+    /**
+     * @param callable|RequestHandlerInterface $controller
+     * @param array                            $params
+     * @return RouterHandler
+     */
+    private function getRouterHandlerMock($controller, array $params = [])
     {
         $route = new RouteResult($controller, $params);
 

@@ -25,7 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * RoutingHandler
+ * An adapter of the `Lepre\Routing\RouterInterface` for the `Psr\Http\Server\RequestHandlerInterface`.
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
@@ -52,10 +52,10 @@ final class RouterHandler implements RequestHandlerInterface
     private $responseFactory;
 
     /**
-     * @param RouterInterface $router
+     * @param RouterInterface             $router
      * @param ControllerResolverInterface $controllerResolver
-     * @param ArgumentsResolverInterface $argumentsResolver
-     * @param ResponseFactoryInterface $responseFactory
+     * @param ArgumentsResolverInterface  $argumentsResolver
+     * @param ResponseFactoryInterface    $responseFactory
      */
     public function __construct(
         RouterInterface $router,
@@ -87,17 +87,23 @@ final class RouterHandler implements RequestHandlerInterface
             $request = $request->withAttribute($name, $value);
         }
 
-        $controller = $this->controllerResolver->getController($route->getHandler());
-        $arguments = $this->argumentsResolver->getArguments($controller, $request);
+        $handler = $route->getHandler();
 
         try {
-            $result = call_user_func_array($controller, $arguments);
+            if ($handler instanceof RequestHandlerInterface) {
+                return $handler->handle($request);
+            } else {
+                $controller = $this->controllerResolver->getController($handler);
+                $arguments = $this->argumentsResolver->getArguments($controller, $request);
 
-            if ($result instanceof ResponseInterface) {
-                return $result;
+                $result = call_user_func_array($controller, $arguments);
+
+                if ($result instanceof ResponseInterface) {
+                    return $result;
+                }
+
+                return $this->createResponse(StatusCodeInterface::STATUS_OK, $result);
             }
-
-            return $this->createResponse(StatusCodeInterface::STATUS_OK, $result);
         } catch (\Throwable $e) {
             return $this->createResponse(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR, $e->getMessage());
         }
