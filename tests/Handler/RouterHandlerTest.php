@@ -111,12 +111,8 @@ final class RouterHandlerTest extends TestCase
 
     public function testWhenTheControllerIsAnInstanceOfPsrRequestHandlerInterface()
     {
-        /**
-         * @var \PHPUnit\Framework\MockObject\MockObject|ServerRequestInterface  $response
-         * @var \PHPUnit\Framework\MockObject\MockObject|RequestHandlerInterface $handler
-         */
+        /** @var \PHPUnit\Framework\MockObject\MockObject|ServerRequestInterface $response */
         $response = $this->createMock(ResponseInterface::class);
-        $handler = $this->createMock(RequestHandlerInterface::class);
 
         $params = [
             'foo' => 123,
@@ -124,20 +120,17 @@ final class RouterHandlerTest extends TestCase
             'baz' => ['a', 'b', 'c'],
         ];
 
-        $handler->expects($this->once())
-            ->method('handle')
-            ->with(
-                $this->callback(function (ServerRequestInterface $request) use ($params, $response) {
-                    $this->assertEquals($params, $request->getAttributes());
+        $handler = $this->createPsrRequestHandlerFixture(
+            function (ServerRequestInterface $request) use ($params, $response) {
+                $this->assertEquals($params, $request->getAttributes());
 
-                    return $response;
-                })
-            )
-            ->willReturn($response);
+                return $response;
+            }
+        );
 
         $this->assertSame(
             $response,
-            $this->getRouterHandlerMock($handler, $params)->handle($this->request)
+            $this->createRouterHandler($handler, $params)->handle($this->request)
         );
     }
 
@@ -158,16 +151,16 @@ final class RouterHandlerTest extends TestCase
             return $response;
         };
 
-        $this->assertSame($response, $this->getRouterHandlerMock($controller, $params)->handle($this->request));
+        $this->assertSame($response, $this->createRouterHandler($controller, $params)->handle($this->request));
     }
 
-    public function testWhenTheControllerReturnAString()
+    public function testWhenTheControllerReturnsAString()
     {
         $controller = function () {
             return 'The response message!';
         };
 
-        $response = $this->getRouterHandlerMock($controller)->handle($this->request);
+        $response = $this->createRouterHandler($controller)->handle($this->request);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('The response message!', $response->getBody()->__toString());
@@ -179,7 +172,7 @@ final class RouterHandlerTest extends TestCase
             throw new \Exception('Ooops! I made a mistake :(');
         };
 
-        $response = $this->getRouterHandlerMock($controller)->handle($this->request);
+        $response = $this->createRouterHandler($controller)->handle($this->request);
 
         $this->assertEquals(500, $response->getStatusCode());
         $this->assertEquals('Ooops! I made a mistake :(', $response->getBody()->__toString());
@@ -190,7 +183,7 @@ final class RouterHandlerTest extends TestCase
      * @param array                            $params
      * @return RouterHandler
      */
-    private function getRouterHandlerMock($controller, array $params = [])
+    private function createRouterHandler($controller, array $params = [])
     {
         $route = new RouteResult($controller, $params);
 
@@ -217,5 +210,27 @@ final class RouterHandlerTest extends TestCase
             $this->argumentsResolver,
             $this->responseFactory
         );
+    }
+
+    /**
+     * @param callable $callable
+     * @return RequestHandlerInterface
+     */
+    private function createPsrRequestHandlerFixture(callable $callable)
+    {
+        return new class($callable) implements RequestHandlerInterface
+        {
+            private $callable;
+
+            public function __construct(callable $callable)
+            {
+                $this->callable = $callable;
+            }
+
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                return call_user_func($this->callable, $request);
+            }
+        };
     }
 }
