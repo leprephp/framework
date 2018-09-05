@@ -23,15 +23,16 @@ namespace Lepre\Framework\Http {
 
 namespace Lepre\Framework\Tests {
 
-    use Interop\Http\Factory\ServerRequestFactoryInterface;
     use Lepre\DI\Container;
     use Lepre\Framework\Http\ResponseSenderInterface;
+    use Lepre\Framework\Http\ServerRequestFactoryFromGlobalsInterface;
     use Lepre\Framework\Kernel;
     use Lepre\Framework\ModuleInterface;
     use Lepre\Framework\Test\HeaderStack;
     use Lepre\Routing\RouterMap;
     use PHPUnit\Framework\TestCase;
     use Psr\Http\Message\ResponseInterface;
+    use Psr\Http\Message\ServerRequestFactoryInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
 
@@ -45,8 +46,8 @@ namespace Lepre\Framework\Tests {
             $request = $this->createMock(ServerRequestInterface::class);
             $response = $this->createMock(ResponseInterface::class);
 
-            $requestFactory = $this->createMock(ServerRequestFactoryInterface::class);
-            $requestFactory->expects($this->once())->method('createServerRequestFromArray')->willReturn($request);
+            $requestFactory = $this->createMock(ServerRequestFactoryFromGlobalsInterface::class);
+            $requestFactory->expects($this->once())->method('createServerRequestFromGlobals')->willReturn($request);
 
             $requestHandler = $this->createMock(RequestHandlerInterface::class);
             $requestHandler->expects($this->once())->method('handle')->with($request)->willReturn($response);
@@ -72,12 +73,12 @@ namespace Lepre\Framework\Tests {
                 private $responseSender;
 
                 /**
-                 * @param ServerRequestFactoryInterface $requestFactory
-                 * @param RequestHandlerInterface       $requestHandler
-                 * @param ResponseSenderInterface       $responseSender
+                 * @param ServerRequestFactoryFromGlobalsInterface $requestFactory
+                 * @param RequestHandlerInterface                  $requestHandler
+                 * @param ResponseSenderInterface                  $responseSender
                  */
                 public function __construct(
-                    ServerRequestFactoryInterface $requestFactory,
+                    ServerRequestFactoryFromGlobalsInterface $requestFactory,
                     RequestHandlerInterface $requestHandler,
                     ResponseSenderInterface $responseSender
                 ) {
@@ -91,7 +92,7 @@ namespace Lepre\Framework\Tests {
                  */
                 public function boot(Container $container)
                 {
-                    $container->set('http.request_factory', function () {
+                    $container->set('http.request_factory_from_globals', function () {
                         return $this->requestFactory;
                     });
 

@@ -14,12 +14,12 @@ declare(strict_types=1);
 namespace Lepre\Framework\Handler;
 
 use Fig\Http\Message\StatusCodeInterface;
-use Interop\Http\Factory\ResponseFactoryInterface;
 use Lepre\Framework\Controller\ArgumentsResolverInterface;
 use Lepre\Framework\Controller\ControllerResolverInterface;
 use Lepre\Routing\Exception\MethodNotAllowedException;
 use Lepre\Routing\Exception\ResourceNotFoundException;
 use Lepre\Routing\RouterInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;

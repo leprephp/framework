@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Lepre\Framework;
 
 use Http\Factory\Diactoros\ResponseFactory;
-use Http\Factory\Diactoros\ServerRequestFactory;
-use Interop\Http\Factory\ServerRequestFactoryInterface;
 use Lepre\DI\Container;
 use Lepre\Framework\Controller\ArgumentsResolver;
 use Lepre\Framework\Controller\ArgumentsResolverInterface;
@@ -24,6 +22,8 @@ use Lepre\Framework\Controller\ControllerResolverInterface;
 use Lepre\Framework\Http\ResponseSender;
 use Lepre\Framework\Http\ResponseSenderInterface;
 use Lepre\Framework\Handler\RouterHandler;
+use Lepre\Framework\Http\ServerRequestFactoryFromGlobals;
+use Lepre\Framework\Http\ServerRequestFactoryFromGlobalsInterface;
 use Lepre\Http\Server\Server;
 use Lepre\Routing\Bridge\AuraRouter\AuraRouterMapAdapter;
 use Lepre\Routing\RouterCollection;
@@ -81,7 +81,7 @@ final class Kernel
     {
         $this->getHttpResponseSender()->send(
             $this->handle(
-                $this->getHttpRequestFactory()->createServerRequestFromArray($_SERVER)
+                $this->createRequestFromGlobals()
             )
         );
     }
@@ -96,11 +96,19 @@ final class Kernel
     }
 
     /**
-     * @return mixed
+     * @return ServerRequestInterface
      */
-    private function getHttpRequestFactory(): ServerRequestFactoryInterface
+    private function createRequestFromGlobals(): ServerRequestInterface
     {
-        return $this->getContainer()->get('http.request_factory');
+        return $this->getHttpRequestFactoryFromGlobals()->createServerRequestFromGlobals();
+    }
+
+    /**
+     * @return ServerRequestFactoryFromGlobalsInterface
+     */
+    private function getHttpRequestFactoryFromGlobals(): ServerRequestFactoryFromGlobalsInterface
+    {
+        return $this->getContainer()->get('http.request_factory_from_globals');
     }
 
     /**
@@ -148,8 +156,8 @@ final class Kernel
             );
         });
 
-        $container->set('http.request_factory', function () {
-            return new ServerRequestFactory();
+        $container->set('http.request_factory_from_globals', function () {
+            return new ServerRequestFactoryFromGlobals();
         });
 
         $container->set('http.response_factory', function () {
