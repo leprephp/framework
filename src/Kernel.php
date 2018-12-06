@@ -177,7 +177,9 @@ final class Kernel
             );
         });
 
-        $container->set(RouterInterface::class, function (Container $container) {
+        $container->alias(RouterInterface::class, RouterCollection::class);
+
+        $container->set(RouterCollection::class, function (Container $container) {
             $collection = new RouterCollection();
             $collection->registerRouter($container->get(RouterMap::class));
 
