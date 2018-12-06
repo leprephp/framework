@@ -89,23 +89,19 @@ final class RouterHandler implements RequestHandlerInterface
 
         $handler = $route->getHandler();
 
-        try {
-            if ($handler instanceof RequestHandlerInterface) {
-                return $handler->handle($request);
-            } else {
-                $controller = $this->controllerResolver->getController($handler);
-                $arguments = $this->argumentsResolver->getArguments($controller, $request);
+        if ($handler instanceof RequestHandlerInterface) {
+            return $handler->handle($request);
+        } else {
+            $controller = $this->controllerResolver->getController($handler);
+            $arguments = $this->argumentsResolver->getArguments($controller, $request);
 
-                $result = call_user_func_array($controller, $arguments);
+            $result = call_user_func_array($controller, $arguments);
 
-                if ($result instanceof ResponseInterface) {
-                    return $result;
-                }
-
-                return $this->createResponse(StatusCodeInterface::STATUS_OK, $result);
+            if ($result instanceof ResponseInterface) {
+                return $result;
             }
-        } catch (\Throwable $e) {
-            return $this->createResponse(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR, $e->getMessage());
+
+            return $this->createResponse(StatusCodeInterface::STATUS_OK, $result);
         }
     }
 

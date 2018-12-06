@@ -166,18 +166,6 @@ final class RouterHandlerTest extends TestCase
         $this->assertEquals('The response message!', $response->getBody()->__toString());
     }
 
-    public function testWhenTheControllerThrowsAnException()
-    {
-        $controller = function () {
-            throw new \Exception('Ooops! I made a mistake :(');
-        };
-
-        $response = $this->createRouterHandler($controller)->handle($this->request);
-
-        $this->assertEquals(500, $response->getStatusCode());
-        $this->assertEquals('Ooops! I made a mistake :(', $response->getBody()->__toString());
-    }
-
     /**
      * @param callable|RequestHandlerInterface $controller
      * @param array                            $params
