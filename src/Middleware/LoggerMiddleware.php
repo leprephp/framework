@@ -134,42 +134,17 @@ final class LoggerMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if ($this->requestLogLevel) {
-            $this->logger->log(
-                $this->requestLogLevel,
-                'Request',
-                [
-                    'request' => $this->requestSerializer->serializeRequest($request),
-                ]
-            );
-        }
+        $this->logRequest($request);
 
         try {
             $response = $handler->handle($request);
         } catch (\Throwable $e) {
-            if ($this->exceptionLogLevel) {
-                $this->logger->log(
-                    $this->exceptionLogLevel,
-                    $e->getMessage(),
-                    [
-                        'exception' => $e,
-                        'request'   => $this->requestSerializer->serializeRequest($request),
-                    ]
-                );
-            }
+            $this->logException($request, $e);
 
             throw $e;
         }
 
-        if ($this->responseLogLevel) {
-            $this->logger->log(
-                $this->responseLogLevel,
-                'Response',
-                [
-                    'response' => $this->responseSerializer->serializeResponse($response),
-                ]
-            );
-        }
+        $this->logResponse($response);
 
         return $response;
     }
@@ -203,5 +178,55 @@ final class LoggerMiddleware implements MiddlewareInterface
         throw new InvalidArgumentException(
             'Level "' . $level . '" is not defined, use one of: ' . implode(', ', $logLevels)
         );
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     */
+    private function logRequest(ServerRequestInterface $request)
+    {
+        if ($this->requestLogLevel) {
+            $this->logger->log(
+                $this->requestLogLevel,
+                'Request',
+                [
+                    'request' => $this->requestSerializer->serializeRequest($request),
+                ]
+            );
+        }
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @param \Throwable             $e
+     */
+    private function logException(ServerRequestInterface $request, \Throwable $e)
+    {
+        if ($this->exceptionLogLevel) {
+            $this->logger->log(
+                $this->exceptionLogLevel,
+                $e->getMessage(),
+                [
+                    'exception' => $e,
+                    'request'   => $this->requestSerializer->serializeRequest($request),
+                ]
+            );
+        }
+    }
+
+    /**
+     * @param $response
+     */
+    private function logResponse($response)
+    {
+        if ($this->responseLogLevel) {
+            $this->logger->log(
+                $this->responseLogLevel,
+                'Response',
+                [
+                    'response' => $this->responseSerializer->serializeResponse($response),
+                ]
+            );
+        }
     }
 }
