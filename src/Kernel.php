@@ -67,7 +67,7 @@ final class Kernel
      * @param string            $environment
      * @param bool              $debug
      */
-    public function __construct(array $modules = [], string $environment = 'production', bool $debug = false)
+    public function __construct(iterable $modules = [], string $environment = 'production', bool $debug = false)
     {
         $this->modules = $modules;
         $this->environment = $environment;

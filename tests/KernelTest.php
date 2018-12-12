@@ -35,12 +35,43 @@ namespace Lepre\Framework\Tests {
     use Psr\Http\Message\ServerRequestFactoryInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
+    use Zend\Diactoros\ServerRequest;
 
     /**
      * @covers \Lepre\Framework\Kernel
      */
     final class KernelTest extends TestCase
     {
+        public function testArrayModules()
+        {
+            $modules = [
+                $this->createModuleMock(),
+                $this->createModuleMock(),
+            ];
+
+            (new Kernel($modules))->handle(new ServerRequest());
+        }
+
+        public function testIterableModules()
+        {
+            $modules = new \ArrayIterator([
+                $this->createModuleMock(),
+                $this->createModuleMock(),
+            ]);
+
+            (new Kernel($modules))->handle(new ServerRequest());
+        }
+
+        public function testGeneratorModules()
+        {
+            $generator = function () {
+                yield $this->createModuleMock();
+                yield $this->createModuleMock();
+            };
+
+            (new Kernel($generator()))->handle(new ServerRequest());
+        }
+
         public function testRun()
         {
             $request = $this->createMock(ServerRequestInterface::class);
@@ -149,6 +180,19 @@ namespace Lepre\Framework\Tests {
 
             $this->assertTrue(HeaderStack::has('HTTP/1.1 200 OK'));
             $this->assertEquals('This is the home page', $content);
+        }
+
+        /**
+         * @return ModuleInterface|\PHPUnit\Framework\MockObject\MockObject
+         */
+        private function createModuleMock()
+        {
+            $module = $this->createMock(ModuleInterface::class);
+            $module->expects($this->once())
+                ->method('boot')
+                ->with($this->isInstanceOf(Container::class));
+
+            return $module;
         }
     }
 }
