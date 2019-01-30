@@ -16,13 +16,15 @@ namespace Lepre\Framework\Http;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * ResponseSenderInterface
+ * The psr-7 sender response interface.
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
 interface ResponseSenderInterface
 {
     /**
+     * Sends a psr-7 response to the client.
+     *
      * @param ResponseInterface $response
      */
     public function send(ResponseInterface$response);

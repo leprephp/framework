@@ -16,12 +16,14 @@ namespace Lepre\Framework\Http\Serializer;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * ResponseStringSerializer
+ * Serialize a psr-7 response in a string.
+ *
+ * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
 final class ResponseStringSerializer extends AbstractMessageStringSerializer implements ResponseSerializerInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      *
      * @return string
      */

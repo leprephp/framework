@@ -16,7 +16,9 @@ namespace Lepre\Framework\Controller;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * ArgumentsResolver
+ * This implementation extracts the controller arguments from the request attributes.
+ *
+ * This class is loosely based on the Symfony project ({@link https://symfony.com/}).
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */

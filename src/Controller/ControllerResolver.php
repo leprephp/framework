@@ -16,7 +16,11 @@ namespace Lepre\Framework\Controller;
 use Psr\Container\ContainerInterface;
 
 /**
- * ControllerResolver
+ * This implementation looks for the controller inside a psr-11 container.
+ *
+ * The service name can be in the form "service" or "service:method".
+ *
+ * This class is loosely based on the Symfony project ({@link https://symfony.com/}).
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */

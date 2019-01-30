@@ -14,7 +14,11 @@ declare(strict_types=1);
 namespace Lepre\Framework\Test;
 
 /**
- * HeaderStack
+ * Store response output artifacts.
+ *
+ * This class is loosely based on the Zend Diactoros project ({@link https://github.com/zendframework/zend-diactoros}).
+ *
+ * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
 final class HeaderStack
 {

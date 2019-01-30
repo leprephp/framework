@@ -25,7 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * An adapter of the `Lepre\Routing\RouterInterface` for the `Psr\Http\Server\RequestHandlerInterface`.
+ * Uses the Lepre Router to provide a psr-15 request handler.
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
@@ -70,7 +70,7 @@ final class RouterHandler implements RequestHandlerInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

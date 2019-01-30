@@ -14,13 +14,17 @@ declare(strict_types=1);
 namespace Lepre\Framework\Controller;
 
 /**
- * ControllerResolverInterface
+ * Determines which controller to execute based on the handler returned by the router.
+ *
+ * This class is loosely based on the Symfony project ({@link https://symfony.com/}).
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
 interface ControllerResolverInterface
 {
     /**
+     * Returns the controller callable associated with the given handler.
+     *
      * @param mixed $handler
      * @return callable
      */

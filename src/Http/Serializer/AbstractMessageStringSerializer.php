@@ -16,7 +16,7 @@ namespace Lepre\Framework\Http\Serializer;
 use Psr\Http\Message\MessageInterface;
 
 /**
- * AbstractMessageStringSerializer
+ * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
 abstract class AbstractMessageStringSerializer
 {

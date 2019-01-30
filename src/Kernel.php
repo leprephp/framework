@@ -36,7 +36,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Kernel
+ * The Kernel is the main entry point of the Lepre framework.
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
@@ -75,7 +75,7 @@ final class Kernel
     }
 
     /**
-     *
+     * Creates a psr-7 request from PHP global variables and sends the corresponding response to the client.
      */
     public function run()
     {
@@ -87,6 +87,8 @@ final class Kernel
     }
 
     /**
+     * Handles a psr-7 request to convert it to a psr-7 response.
+     *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */

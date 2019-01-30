@@ -17,10 +17,15 @@ use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\ServerRequestFactory;
 
 /**
- * ServerRequestFactoryFromGlobals
+ * Uses the Zend Diactoros ServerRequestFactory to implement the ServerRequestFactoryFromGlobalsInterface.
+ *
+ * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
 final class ServerRequestFactoryFromGlobals implements ServerRequestFactoryFromGlobalsInterface
 {
+    /**
+     * @inheritDoc
+     */
     public function createServerRequestFromGlobals(): ServerRequestInterface
     {
         return ServerRequestFactory::fromGlobals();

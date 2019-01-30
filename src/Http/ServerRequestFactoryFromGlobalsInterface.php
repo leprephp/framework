@@ -16,9 +16,16 @@ namespace Lepre\Framework\Http;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * ServerRequestFactoryFromGlobalsInterface
+ * Interface to create a ServerRequest from PHP global variables.
+ *
+ * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
 interface ServerRequestFactoryFromGlobalsInterface
 {
+    /**
+     * Creates a ServerRequest from PHP global variables.
+     *
+     * @return ServerRequestInterface
+     */
     public function createServerRequestFromGlobals(): ServerRequestInterface;
 }

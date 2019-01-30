@@ -24,7 +24,11 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 /**
- * LoggerMiddleware
+ * A middleware to log the request and the resulted response through a psr-3 logger.
+ *
+ * Not caught exceptions thrown by the handler are also logged.
+ *
+ * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
 final class LoggerMiddleware implements MiddlewareInterface
 {
@@ -128,7 +132,7 @@ final class LoggerMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      *
      * @throws \Throwable
      */

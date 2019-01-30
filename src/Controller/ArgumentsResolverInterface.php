@@ -16,13 +16,17 @@ namespace Lepre\Framework\Controller;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * ArgumentsResolverInterface
+ * Resolves the arguments to pass to the controller.
+ *
+ * This class is loosely based on the Symfony project ({@link https://symfony.com/}).
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
 interface ArgumentsResolverInterface
 {
     /**
+     * Returns the arguments to pass to the controller.
+     *
      * @param callable               $controller
      * @param ServerRequestInterface $request
      * @return array

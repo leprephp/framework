@@ -16,12 +16,14 @@ namespace Lepre\Framework\Http\Serializer;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * ServerRequestStringSerializer
+ * Serialize a psr-7 request in a string.
+ *
+ * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
 final class RequestStringSerializer extends AbstractMessageStringSerializer implements RequestSerializerInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      *
      * @return string
      */

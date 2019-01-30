@@ -16,11 +16,15 @@ namespace Lepre\Framework\Http\Serializer;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * The serializer converts a request object in a string or in an array for log or print purpose.
+ * Interface to serialize a psr-7 request for log or print purpose.
+ *
+ * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
 interface RequestSerializerInterface
 {
     /**
+     * Serializes a psr-7 request object.
+     *
      * @param RequestInterface $request
      * @return array|string
      */

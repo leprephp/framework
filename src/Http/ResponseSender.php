@@ -17,7 +17,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * ResponseSender
+ * Basic implementation of ResponseSenderInterface.
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */

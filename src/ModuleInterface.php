@@ -16,18 +16,19 @@ namespace Lepre\Framework;
 use Lepre\DI\Container;
 
 /**
- * Module interface.
+ * A module allows to extend the functionality of the Lepre framework.
  *
- * Defines all the hooks of a module lifecycle.
+ * This interface defines all the hooks of a module lifecycle.
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
 interface ModuleInterface
 {
     /**
-     * Hook on load the application kernel.
+     * Hook on boot the application kernel.
      *
      * You can use this hook to register services, add routes or set configurations.
+     * This allows to extend the functionality of Lepre.
      *
      * @param Container $container
      */
