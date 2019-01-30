@@ -19,6 +19,10 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Zend\Diactoros\Response;
 
+/**
+ * @covers \Lepre\Framework\Http\Serializer\AbstractMessageStringSerializer
+ * @covers \Lepre\Framework\Http\Serializer\ResponseStringSerializer
+ */
 class ResponseStringSerializerTest extends TestCase
 {
     /**

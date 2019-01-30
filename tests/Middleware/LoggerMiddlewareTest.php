@@ -23,6 +23,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
+/**
+ * @covers \Lepre\Framework\Middleware\LoggerMiddleware
+ */
 class LoggerMiddlewareTest extends TestCase
 {
     public function testProcess()

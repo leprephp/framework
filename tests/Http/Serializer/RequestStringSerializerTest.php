@@ -20,6 +20,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Uri;
 
+/**
+ * @covers \Lepre\Framework\Http\Serializer\AbstractMessageStringSerializer
+ * @covers \Lepre\Framework\Http\Serializer\RequestStringSerializer
+ */
 class RequestStringSerializerTest extends TestCase
 {
     /**

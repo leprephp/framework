@@ -17,6 +17,9 @@ use Lepre\Framework\Http\ServerRequestFactoryFromGlobals;
 use PHPUnit\Framework\TestCase;
 use Zend\Diactoros\ServerRequest;
 
+/**
+ * @covers \Lepre\Framework\Http\ServerRequestFactoryFromGlobals
+ */
 class ServerRequestFactoryFromGlobalsTest extends TestCase
 {
     /**
