@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class HeaderStackTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         HeaderStack::reset();
     }

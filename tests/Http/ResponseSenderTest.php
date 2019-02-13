@@ -38,7 +38,7 @@ namespace Lepre\Framework\Tests\Http {
          */
         private $responseSender;
 
-        public function setUp()
+        public function setUp(): void
         {
             HeaderStack::reset();
             $this->responseSender = new ResponseSender();

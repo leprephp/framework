@@ -61,7 +61,7 @@ final class RouterHandlerTest extends TestCase
     /**
      * @inheritDoc
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->router = $this->createMock(RouterInterface::class);
         $this->controllerResolver = $this->createMock(ControllerResolverInterface::class);

@@ -46,12 +46,11 @@ final class ArgumentsResolverTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Callable "Closure" requires that you provide a value for the "$foo" argument (because there is no default value or because there is a non optional argument after this one).
-     */
     public function testClosureWithoutDefaultArgumentValue()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Callable "Closure" requires that you provide a value for the "$foo" argument (because there is no default value or because there is a non optional argument after this one).');
+
         $resolver = new ArgumentsResolver();
         $request = $this->createRequestMock();
 
@@ -86,12 +85,11 @@ final class ArgumentsResolverTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Callable "Lepre\Framework\Tests\Controller\fooController3" requires that you provide a value for the "$foo" argument (because there is no default value or because there is a non optional argument after this one).
-     */
     public function testFunctionWithoutDefaultArgumentValue()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Callable "Lepre\\Framework\\Tests\\Controller\\fooController3" requires that you provide a value for the "$foo" argument (because there is no default value or because there is a non optional argument after this one).');
+
         function fooController3($foo) {}
 
         $resolver = new ArgumentsResolver();
@@ -129,12 +127,11 @@ final class ArgumentsResolverTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Callable "Lepre\Framework\Tests\Controller\InvokableWithoutDefaultArgumentValueFixture" requires that you provide a value for the "$foo" argument (because there is no default value or because there is a non optional argument after this one).
-     */
     public function testInvokableWithoutDefaultArgumentValue()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Callable "Lepre\\Framework\\Tests\\Controller\\InvokableWithoutDefaultArgumentValueFixture" requires that you provide a value for the "$foo" argument (because there is no default value or because there is a non optional argument after this one).');
+
         $resolver = new ArgumentsResolver();
         $request = $this->createRequestMock();
 
@@ -170,12 +167,11 @@ final class ArgumentsResolverTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Callable "Lepre\Framework\Tests\Controller\ArrayCallableWithoutDefaultArgumentValueFixture::foo()" requires that you provide a value for the "$foo" argument (because there is no default value or because there is a non optional argument after this one).
-     */
     public function testArrayCallableWithoutDefaultArgumentValue()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Callable "Lepre\\Framework\\Tests\\Controller\\ArrayCallableWithoutDefaultArgumentValueFixture::foo()" requires that you provide a value for the "$foo" argument (because there is no default value or because there is a non optional argument after this one).');
+
         $resolver = new ArgumentsResolver();
         $request = $this->createRequestMock();
 

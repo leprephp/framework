@@ -142,11 +142,12 @@ class LoggerMiddlewareTest extends TestCase
      * @param string $method
      *
      * @dataProvider             logLevelMethodsProvider
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Level "wrong" is not defined, use one of: debug, info, notice, warning, error, critical, alert, emergency
      */
     public function testWrongLogLevel($method)
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Level "wrong" is not defined, use one of: debug, info, notice, warning, error, critical, alert, emergency');
+
         $logger = $this->createLoggerMock();
         $requestSerializer = $this->createRequestSerializerMock();
         $responseSerializer = $this->createMock(ResponseSerializerInterface::class);

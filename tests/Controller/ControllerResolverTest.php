@@ -113,12 +113,11 @@ final class ControllerResolverTest extends TestCase
         $this->assertSame($colonController, $resolver->getController('controller:fooAction'));
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage The handler must be a callable, a valid service name or a string in the form "controller:action".
-     */
     public function testException()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('The handler must be a callable, a valid service name or a string in the form "controller:action".');
+
         $container = $this->createMock(ContainerInterface::class);
         $container->method('has')->with('controller')->willReturn(false);
 
