@@ -1,44 +1,54 @@
 {
-  "name": "lepre/framework",
-  "description": "The Lepre main framework",
-  "type": "library",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Daniele De Nobili",
-      "email": "danieledenobili@gmail.com"
+    "name": "lepre/framework",
+    "description": "The Lepre main framework",
+    "keywords": [
+        "framework",
+        "psr-7"
+    ],
+    "homepage": "https://github.com/leprephp/framework",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniele De Nobili",
+            "email": "danieledenobili@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/leprephp/framework",
+        "issues": "https://github.com/leprephp/framework/issues"
+    },
+    "require": {
+        "php": "^7.1",
+        "aura/router": "^3.1",
+        "fig/http-message-util": "^1.1",
+        "http-interop/http-factory-diactoros": "^1.0",
+        "lepre/di": "dev-master",
+        "lepre/http-server": "dev-master",
+        "lepre/routing": "dev-master",
+        "psr/http-factory": "^1.0",
+        "psr/http-message": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "zendframework/zend-diactoros": "^1.7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0 || ^8.0",
+        "php-coveralls/php-coveralls": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lepre\\Framework\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Lepre\\Framework\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "phpunit"
+        ]
     }
-  ],
-  "require": {
-    "php": "^7.1",
-    "aura/router": "^3.1",
-    "fig/http-message-util": "^1.1",
-    "http-interop/http-factory-diactoros": "^1.0",
-    "lepre/di": "dev-master",
-    "lepre/http-server": "dev-master",
-    "lepre/routing": "dev-master",
-    "psr/http-factory": "^1.0",
-    "psr/http-message": "^1.0",
-    "psr/http-server-middleware": "^1.0",
-    "zendframework/zend-diactoros": "^1.7"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^7.0 || ^8.0",
-    "php-coveralls/php-coveralls": "^2.1"
-  },
-  "autoload": {
-    "psr-4": {
-      "Lepre\\Framework\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Lepre\\Framework\\Tests\\": "tests/"
-    }
-  },
-  "scripts": {
-    "test": [
-      "phpunit"
-    ]
-  }
 }
