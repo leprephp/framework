@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Lepre\Framework\Middleware;
 
-use Lepre\Framework\Http\Serializer\ResponseSerializerInterface;
-use Lepre\Framework\Http\Serializer\RequestSerializerInterface;
+use Lepre\Framework\Http\Serializer\MessageSerializerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -38,14 +37,9 @@ final class LoggerMiddleware implements MiddlewareInterface
     private $logger;
 
     /**
-     * @var RequestSerializerInterface
+     * @var MessageSerializerInterface
      */
-    private $requestSerializer;
-
-    /**
-     * @var ResponseSerializerInterface
-     */
-    private $responseSerializer;
+    private $messageSerializer;
 
     /**
      * The log level for the request.
@@ -69,18 +63,13 @@ final class LoggerMiddleware implements MiddlewareInterface
     private $exceptionLogLevel = LogLevel::EMERGENCY;
 
     /**
-     * @param LoggerInterface             $logger
-     * @param RequestSerializerInterface  $requestSerializer
-     * @param ResponseSerializerInterface $responseSerializer
+     * @param LoggerInterface            $logger
+     * @param MessageSerializerInterface $serializer
      */
-    public function __construct(
-        LoggerInterface $logger,
-        RequestSerializerInterface $requestSerializer,
-        ResponseSerializerInterface $responseSerializer
-    ) {
+    public function __construct(LoggerInterface $logger, MessageSerializerInterface $serializer)
+    {
         $this->logger = $logger;
-        $this->requestSerializer = $requestSerializer;
-        $this->responseSerializer = $responseSerializer;
+        $this->messageSerializer = $serializer;
     }
 
     /**
@@ -194,7 +183,7 @@ final class LoggerMiddleware implements MiddlewareInterface
                 $this->requestLogLevel,
                 'Request',
                 [
-                    'request' => $this->requestSerializer->serializeRequest($request),
+                    'request' => $this->messageSerializer->serializeRequest($request),
                 ]
             );
         }
@@ -212,7 +201,7 @@ final class LoggerMiddleware implements MiddlewareInterface
                 $e->getMessage(),
                 [
                     'exception' => $e,
-                    'request'   => $this->requestSerializer->serializeRequest($request),
+                    'request'   => $this->messageSerializer->serializeRequest($request),
                 ]
             );
         }
@@ -228,7 +217,7 @@ final class LoggerMiddleware implements MiddlewareInterface
                 $this->responseLogLevel,
                 'Response',
                 [
-                    'response' => $this->responseSerializer->serializeResponse($response),
+                    'response' => $this->messageSerializer->serializeResponse($response),
                 ]
             );
         }

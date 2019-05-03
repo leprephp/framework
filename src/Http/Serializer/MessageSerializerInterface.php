@@ -13,15 +13,24 @@ declare(strict_types=1);
 
 namespace Lepre\Framework\Http\Serializer;
 
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Interface to serialize a psr-7 response for log or print purpose.
+ * Interface to serialize a psr-7 request and response objects for log or print purpose.
  *
  * @author Daniele De Nobili <danieledenobili@gmail.com>
  */
-interface ResponseSerializerInterface
+interface MessageSerializerInterface
 {
+    /**
+     * Serializes a psr-7 request object.
+     *
+     * @param RequestInterface $request
+     * @return array|string
+     */
+    public function serializeRequest(RequestInterface $request);
+
     /**
      * Serializes a psr-7 response object.
      *

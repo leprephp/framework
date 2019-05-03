@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Lepre\Framework\Tests\Middleware;
 
-use Lepre\Framework\Http\Serializer\RequestSerializerInterface;
-use Lepre\Framework\Http\Serializer\ResponseSerializerInterface;
+use Lepre\Framework\Http\Serializer\MessageSerializerInterface;
 use Lepre\Framework\Middleware\LoggerMiddleware;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -33,15 +32,14 @@ class LoggerMiddlewareTest extends TestCase
         $request = $this->createRequestMock();
         $response = $this->createResponseMock();
         $requestHandler = $this->createHandlerMock($request, $response);
-        $requestSerializer = $this->createRequestSerializerMock($request);
-        $responseSerializer = $this->createResponseSerializerMock($response);
+        $serializer = $this->createSerializerMock($request, $response);
 
         $logger = $this->createLoggerMock();
         $this->expectLogRequest($logger, 0, LogLevel::DEBUG);
         $this->expectLogResponse($logger, 1, LogLevel::DEBUG);
         $logger->expects($this->exactly(2))->method('log');
 
-        $middleware = new LoggerMiddleware($logger, $requestSerializer, $responseSerializer);
+        $middleware = new LoggerMiddleware($logger, $serializer);
         $this->assertSame($response, $middleware->process($request, $requestHandler));
     }
 
@@ -50,15 +48,14 @@ class LoggerMiddlewareTest extends TestCase
         $request = $this->createRequestMock();
         $response = $this->createResponseMock();
         $requestHandler = $this->createHandlerMock($request, $response);
-        $requestSerializer = $this->createRequestSerializerMock($request);
-        $responseSerializer = $this->createResponseSerializerMock($response);
+        $serializer = $this->createSerializerMock($request, $response);
 
         $logger = $this->createLoggerMock();
         $this->expectLogRequest($logger, 0, LogLevel::INFO);
         $this->expectLogResponse($logger, 1, LogLevel::INFO);
         $logger->expects($this->exactly(2))->method('log');
 
-        $middleware = new LoggerMiddleware($logger, $requestSerializer, $responseSerializer);
+        $middleware = new LoggerMiddleware($logger, $serializer);
         $middleware->setRequestLogLevel(LogLevel::INFO);
         $middleware->setResponseLogLevel(LogLevel::INFO);
         $this->assertSame($response, $middleware->process($request, $requestHandler));
@@ -69,14 +66,13 @@ class LoggerMiddlewareTest extends TestCase
         $request = $this->createRequestMock();
         $response = $this->createResponseMock();
         $requestHandler = $this->createHandlerMock($request, $response);
-        $requestSerializer = $this->createRequestSerializerMock($request);
-        $responseSerializer = $this->createResponseSerializerMock($response);
+        $serializer = $this->createSerializerMock($request, $response);
 
         $logger = $this->createLoggerMock();
         $this->expectLogResponse($logger, 0, LogLevel::DEBUG);
         $logger->expects($this->exactly(1))->method('log');
 
-        $middleware = new LoggerMiddleware($logger, $requestSerializer, $responseSerializer);
+        $middleware = new LoggerMiddleware($logger, $serializer);
         $middleware->setRequestLogLevel(false);
         $this->assertSame($response, $middleware->process($request, $requestHandler));
     }
@@ -86,14 +82,13 @@ class LoggerMiddlewareTest extends TestCase
         $request = $this->createRequestMock();
         $response = $this->createResponseMock();
         $requestHandler = $this->createHandlerMock($request, $response);
-        $requestSerializer = $this->createRequestSerializerMock($request);
-        $responseSerializer = $this->createResponseSerializerMock($response);
+        $serializer = $this->createSerializerMock($request, $response);
 
         $logger = $this->createLoggerMock();
         $this->expectLogRequest($logger, 0, LogLevel::DEBUG);
         $logger->expects($this->exactly(1))->method('log');
 
-        $middleware = new LoggerMiddleware($logger, $requestSerializer, $responseSerializer);
+        $middleware = new LoggerMiddleware($logger, $serializer);
         $middleware->setResponseLogLevel(false);
         $this->assertSame($response, $middleware->process($request, $requestHandler));
     }
@@ -103,8 +98,7 @@ class LoggerMiddlewareTest extends TestCase
         $request = $this->createRequestMock();
         $exception = new \Exception('The exception message');
         $requestHandler = $this->createHandlerMock($request, null, $exception);
-        $requestSerializer = $this->createRequestSerializerMock($request);
-        $responseSerializer = $this->createResponseSerializerMock();
+        $serializer = $this->createSerializerMock($request);
 
         $logger = $this->createLoggerMock();
         $this->expectLogRequest($logger, 0, LogLevel::DEBUG);
@@ -113,7 +107,7 @@ class LoggerMiddlewareTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('The exception message');
 
-        $middleware = new LoggerMiddleware($logger, $requestSerializer, $responseSerializer);
+        $middleware = new LoggerMiddleware($logger, $serializer);
         $middleware->process($request, $requestHandler);
     }
 
@@ -122,8 +116,7 @@ class LoggerMiddlewareTest extends TestCase
         $request = $this->createRequestMock();
         $exception = new \Exception('The exception message');
         $requestHandler = $this->createHandlerMock($request, null, $exception);
-        $requestSerializer = $this->createRequestSerializerMock($request);
-        $responseSerializer = $this->createResponseSerializerMock();
+        $serializer = $this->createSerializerMock($request);
 
         $logger = $this->createLoggerMock();
         $this->expectLogRequest($logger, 0, LogLevel::INFO);
@@ -132,7 +125,7 @@ class LoggerMiddlewareTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('The exception message');
 
-        $middleware = new LoggerMiddleware($logger, $requestSerializer, $responseSerializer);
+        $middleware = new LoggerMiddleware($logger, $serializer);
         $middleware->setRequestLogLevel(LogLevel::INFO);
         $middleware->setExceptionLogLevel(LogLevel::ALERT);
         $middleware->process($request, $requestHandler);
@@ -149,16 +142,14 @@ class LoggerMiddlewareTest extends TestCase
         $this->expectExceptionMessage('Level "wrong" is not defined, use one of: debug, info, notice, warning, error, critical, alert, emergency');
 
         $logger = $this->createLoggerMock();
-        $requestSerializer = $this->createRequestSerializerMock();
-        $responseSerializer = $this->createMock(ResponseSerializerInterface::class);
+        $serializer = $this->createSerializerMock();
 
         /**
-         * @var RequestSerializerInterface  $requestSerializer
-         * @var ResponseSerializerInterface $responseSerializer
+         * @var MessageSerializerInterface  $serializer
          * @var LoggerInterface             $logger
          */
 
-        $middleware = new LoggerMiddleware($logger, $requestSerializer, $responseSerializer);
+        $middleware = new LoggerMiddleware($logger, $serializer);
         $middleware->$method('wrong');
     }
 
@@ -216,38 +207,28 @@ class LoggerMiddlewareTest extends TestCase
 
     /**
      * @param ServerRequestInterface $request
-     * @return \PHPUnit\Framework\MockObject\MockObject|RequestSerializerInterface
+     * @param ResponseInterface      $response
+     * @return \PHPUnit\Framework\MockObject\MockObject|MessageSerializerInterface
      */
-    private function createRequestSerializerMock($request = null)
+    private function createSerializerMock($request = null, $response = null)
     {
-        $requestSerializer = $this->createMock(RequestSerializerInterface::class);
+        $serializer = $this->createMock(MessageSerializerInterface::class);
 
         if ($request) {
-            $requestSerializer->expects($this->any())
+            $serializer->expects($this->any())
                 ->method('serializeRequest')
                 ->with($request)
                 ->willReturn('the serialized request');
         }
 
-        return $requestSerializer;
-    }
-
-    /**
-     * @param ResponseInterface $response
-     * @return \PHPUnit\Framework\MockObject\MockObject|ResponseSerializerInterface
-     */
-    private function createResponseSerializerMock($response = null)
-    {
-        $responseSerializer = $this->createMock(ResponseSerializerInterface::class);
-
         if ($response) {
-            $responseSerializer->expects($this->any())
+            $serializer->expects($this->any())
                 ->method('serializeResponse')
                 ->with($response)
                 ->willReturn('the serialized response');
         }
 
-        return $responseSerializer;
+        return $serializer;
     }
 
     /**
