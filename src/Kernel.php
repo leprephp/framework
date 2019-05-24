@@ -45,7 +45,7 @@ final class Kernel
     /**
      * @var ModuleInterface[]
      */
-    private $modules;
+    private $modules = [];
 
     /**
      * @var string
@@ -69,9 +69,20 @@ final class Kernel
      */
     public function __construct(iterable $modules = [], string $environment = 'production', bool $debug = false)
     {
-        $this->modules = $modules;
         $this->environment = $environment;
         $this->debug = $debug;
+
+        foreach ($modules as $module) {
+            $this->registerModule($module);
+        }
+    }
+
+    /**
+     * @param ModuleInterface $module
+     */
+    private function registerModule(ModuleInterface $module)
+    {
+        $this->modules[] = $module;
     }
 
     /**
@@ -205,20 +216,11 @@ final class Kernel
         });
 
         foreach ($this->modules as $module) {
-            $this->registerModule($module, $container);
+            $module->boot($container);
         }
 
         $container->freeze();
 
         return $container;
-    }
-
-    /**
-     * @param ModuleInterface $module
-     * @param Container       $container
-     */
-    private function registerModule(ModuleInterface $module, Container $container)
-    {
-        $module->boot($container);
     }
 }
