@@ -35,41 +35,74 @@ namespace Lepre\Framework\Tests {
     use Psr\Http\Message\ServerRequestFactoryInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Zend\Diactoros\ServerRequest;
 
     /**
      * @covers \Lepre\Framework\Kernel
      */
     final class KernelTest extends TestCase
     {
-        public function testArrayModules()
+        /**
+         * @param iterable $modules
+         * @dataProvider modulesProvider
+         */
+        public function testIterableModules($modules)
         {
-            $modules = [
-                $this->createModuleMock(),
-                $this->createModuleMock(),
+            $exception = null;
+
+            try {
+                new Kernel($modules);
+            } catch (\TypeError $exception) {
+            }
+
+            $this->assertNull($exception, 'Unexpected TypeError');
+        }
+
+        public function modulesProvider()
+        {
+            // array
+            yield [
+                [
+                    $this->createMock(ModuleInterface::class),
+                    $this->createMock(ModuleInterface::class),
+                ]
             ];
 
-            (new Kernel($modules))->handle(new ServerRequest());
-        }
+            // iterator
+            yield [
+                new \ArrayIterator([
+                    $this->createMock(ModuleInterface::class),
+                    $this->createMock(ModuleInterface::class),
+                ])
+            ];
 
-        public function testIterableModules()
-        {
-            $modules = new \ArrayIterator([
-                $this->createModuleMock(),
-                $this->createModuleMock(),
-            ]);
-
-            (new Kernel($modules))->handle(new ServerRequest());
-        }
-
-        public function testGeneratorModules()
-        {
+            // generator
             $generator = function () {
-                yield $this->createModuleMock();
-                yield $this->createModuleMock();
+                yield $this->createMock(ModuleInterface::class);
+                yield $this->createMock(ModuleInterface::class);
             };
 
-            (new Kernel($generator()))->handle(new ServerRequest());
+            yield [$generator()];
+        }
+
+        /**
+         * Tests the internal php error is run when create the kernel with invalid modules.
+         *
+         * @param mixed $modules
+         * @dataProvider wrongModulesProvider
+         */
+        public function testWrongModules($modules)
+        {
+            $this->expectException(\TypeError::class);
+
+            new Kernel($modules);
+        }
+
+        public function wrongModulesProvider()
+        {
+            yield [null];
+            yield [123];
+            yield ['must be an iterable'];
+            yield [['must be a ModuleInterface']];
         }
 
         public function testRun()
@@ -180,19 +213,6 @@ namespace Lepre\Framework\Tests {
 
             $this->assertTrue(HeaderStack::has('HTTP/1.1 200 OK'));
             $this->assertEquals('This is the home page', $content);
-        }
-
-        /**
-         * @return ModuleInterface|\PHPUnit\Framework\MockObject\MockObject
-         */
-        private function createModuleMock()
-        {
-            $module = $this->createMock(ModuleInterface::class);
-            $module->expects($this->once())
-                ->method('boot')
-                ->with($this->isInstanceOf(Container::class));
-
-            return $module;
         }
     }
 }
