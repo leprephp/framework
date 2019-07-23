@@ -64,7 +64,7 @@ final class ArgumentsResolver implements ArgumentsResolverInterface
      * @param callable $controller
      * @return \ReflectionParameter[]
      */
-    protected function getParameters(callable $controller): array
+    private function getParameters(callable $controller): array
     {
         if (is_array($controller)) {
             $ref = new \ReflectionMethod($controller[0], $controller[1]);

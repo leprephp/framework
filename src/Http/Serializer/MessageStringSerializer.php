@@ -64,7 +64,7 @@ final class MessageStringSerializer implements MessageSerializerInterface
      * @param MessageInterface $message
      * @return string
      */
-    protected function prepareHeaders(MessageInterface $message)
+    private function prepareHeaders(MessageInterface $message)
     {
         $headers = [];
         foreach ($message->getHeaders() as $name => $values) {
@@ -78,7 +78,7 @@ final class MessageStringSerializer implements MessageSerializerInterface
      * @param MessageInterface $message
      * @return string
      */
-    protected function prepareBody(MessageInterface $message)
+    private function prepareBody(MessageInterface $message)
     {
         return (string) $message->getBody()->getContents();
     }
