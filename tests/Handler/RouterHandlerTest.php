@@ -180,10 +180,22 @@ final class RouterHandlerTest extends TestCase
             ->with($this->request)
             ->willReturn($route);
 
-        $this->controllerResolver
-            ->method('getController')
-            ->with($controller)
-            ->willReturn($controller);
+        if ($controller instanceof RequestHandlerInterface) {
+            $this->controllerResolver
+                ->expects($this->never())
+                ->method('getController');
+        } elseif (is_callable($controller)) {
+            $this->controllerResolver
+                ->method('getController')
+                ->with($controller)
+                ->willReturn($controller);
+        } else {
+            throw new \InvalidArgumentException(sprintf(
+                'Argument 2 passed to %s() must be a callable or an instance of %s',
+                __METHOD__,
+                RequestHandlerInterface::class
+            ));
+        }
 
         $this->argumentsResolver
             ->method('getArguments')
